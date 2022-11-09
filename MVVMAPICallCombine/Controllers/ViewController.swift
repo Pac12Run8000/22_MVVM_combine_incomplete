@@ -12,8 +12,6 @@ class ViewController: UIViewController {
     
     var cancellables:Set<AnyCancellable> = []
     
-    let tempArray = ["Floyd Schofield", "Dimitri Grover", "Major Hacket", "Lorenzo Simpson", "Tank Davis"]
-    
     @IBOutlet weak var searchTextField: UITextField!
     @IBOutlet weak var tableView: UITableView!
     
@@ -22,14 +20,13 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         tableView.delegate = self
         tableView.dataSource = self
+        setupBinding()
         
-        viewModel.populateTableViewWithList(input: "ol")
 
     }
 
     @IBAction func submitBtnPressed(_ sender: UIButton) {
-        
-        
+        viewModel.populateTableViewWithList(input: searchTextField.text)
     }
     
 }
@@ -37,13 +34,24 @@ class ViewController: UIViewController {
 extension ViewController:UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return tempArray.count
+        return viewModel.list.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell")
-        cell?.textLabel?.text = tempArray[indexPath.row]
+        cell?.textLabel?.text = viewModel.list[indexPath.row]
         return cell!
+    }
+}
+
+extension ViewController {
+    
+    public func setupBinding() {
+        viewModel.$list.sink {  _ in
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
+        }.store(in: &cancellables)
     }
 }
 

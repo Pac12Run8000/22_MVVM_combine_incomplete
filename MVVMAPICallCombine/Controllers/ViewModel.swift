@@ -37,9 +37,10 @@ final class ViewModel {
                 localList.append(item.lf)
             }
             strongself.list = localList
-            print("localList: \(localList)")
         }.store(in: &cancellables)
 
     }
     
 }
+
+
