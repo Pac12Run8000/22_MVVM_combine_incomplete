@@ -6,19 +6,25 @@
 //
 
 import UIKit
+import Combine
 
 class ViewController: UIViewController {
+    
+    var cancellables:Set<AnyCancellable> = []
     
     let tempArray = ["Floyd Schofield", "Dimitri Grover", "Major Hacket", "Lorenzo Simpson", "Tank Davis"]
     
     @IBOutlet weak var searchTextField: UITextField!
     @IBOutlet weak var tableView: UITableView!
     
-
+    var viewModel = ViewModel()
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.delegate = self
         tableView.dataSource = self
+        
+        viewModel.populateTableViewWithList(input: "ol")
+
     }
 
     @IBAction func submitBtnPressed(_ sender: UIButton) {
